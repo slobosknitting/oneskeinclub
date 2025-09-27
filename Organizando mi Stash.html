@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizando mi Stash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a02c89 0%, #d14ba8 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            flex: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #644b3f;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .ritual-intro {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #a02c89;
+        }
+
+        .ritual-intro h2 {
+            color: #644b3f;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .step-container {
+            margin-bottom: 30px;
+        }
+
+        .step-header {
+            background: #644b3f;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step-time {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .step-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #e9ecef;
+            border-top: none;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item:hover {
+            background: rgba(160, 44, 137, 0.05);
+            padding-left: 10px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #a02c89;
+        }
+
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #644b3f;
+        }
+
+        .checklist-item.completed label {
+            text-decoration: line-through;
+            color: #95a5a6;
+        }
+
+        .progress-section {
+            background: linear-gradient(45deg, #a02c89, #d14ba8);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .group-box {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .group-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .group-a { border-color: #28a745; }
+        .group-b { border-color: #ffc107; }
+        .group-c { border-color: #fd7e14; }
+        .group-d { border-color: #dc3545; }
+
+        .group-box h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .group-a h4 { color: #28a745; }
+        .group-b h4 { color: #ffc107; }
+        .group-c h4 { color: #fd7e14; }
+        .group-d h4 { color: #dc3545; }
+
+        .notes-section {
+            margin-top: 30px;
+        }
+
+        .notes-box {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+        }
+
+        .notes-box:focus {
+            border-color: #a02c89;
+            outline: none;
+        }
+
+        .completion-celebration {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .celebration-emoji {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .print-button {
+            background: #a02c89;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .print-button:hover {
+            background: #d14ba8;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para el footer */
+        .branding-footer {
+            max-width: 800px;
+            margin: 20px auto 0;
+            text-align: center;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo-container {
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .logo-text {
+            font-weight: bold;
+        }
+
+        .brand-tagline {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .website {
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .social-links {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .logo-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            
+            .print-button, .branding-footer {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧶 Organizando mi Stash</h1>
+            <p>Transforma tu espacio de tejido cada 6 meses</p>
+        </div>
+
+        <div class="ritual-intro">
+            <h2>🌟 ¿Por qué este ritual cambiará tu experiencia de tejido?</h2>
+            <p>Como tejedoras, a menudo nos encontramos acumulando lanas hermosas, patrones inspiradores y proyectos a medio hacer. Pero cuando nuestro espacio creativo se vuelve caótico o empieza a crecer sin propósito, también lo hace nuestra mente. Este ritual semestral no es solo sobre organizar—es sobre reconectar contigo misma y redescubrir la magia que ya tienes en tu stash.</p>
+            
+            <p>Imagina abrir tu lugar de almacenaje y sentir inmediatamente inspiración en lugar de sentirte abrumada. Visualiza saber exactamente qué lanas tienes, dónde están, y qué proyectos te esperan. Esta transformación no es solo posible, es inevitable cuando dedicas unas pocas horas cada seis meses a este proceso amoroso de reorganización.</p>
+            
+            <p>Al final de estas 3 horas no solo tendrás un espacio ordenado—tendrás claridad mental, inspiración renovada, y la libertad creativa que surge cuando todo tiene su lugar perfecto. Porque cuando tu espacio respira, tu creatividad vuela.</p>
+            
+            <p><strong>Tiempo total estimado:</strong> 3 horas | <strong>Mejor momento:</strong> Fin de semana por la mañana</p>
+        </div>
+
+        <div class="progress-section">
+            <h3>Tu Progreso</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">0% Completado</p>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>PASO 1: EVALUACIÓN</span>
+                <span class="step-time">30 min</span>
+            </div>
+            <div class="step-content">
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval1">
+                        <label for="eval1">Saco TODA la lana de su lugar de almacenaje (sin excepciones)</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval2">
+                        <label for="eval2">Limpio a fondo todos los contenedores y cajones</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval3">
+                        <label for="eval3">Añado antihumedad nuevo (bolsitas de sílica o lavanda)</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval4">
+                        <label for="eval4">Pongo música motivadora o podcast favorito</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval5">
+                        <label for="eval5">Invito a una amiga tejedora (opcional pero divertido)</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>PASO 2: CLASIFICACIÓN</span>
+                <span class="step-time">45 min</span>
+            </div>
+            <div class="step-content">
+                <p>Separa toda tu lana en 4 grupos. Tómate tu tiempo para evaluar cada madeja:</p>
+                
+                <div class="groups-container">
+                    <div class="group-box group-a">
+                        <h4>GRUPO A</h4>
+                        <p>Lanas que amo y sé que usaré</p>
+                        <p>✨ Mis favoritas</p>
+                    </div>
+                    <div class="group-box group-b">
+                        <h4>GRUPO B</h4>
+                        <p>Me gustan pero sin proyecto definido</p>
+                        <p>🤔 Segunda oportunidad</p>
+                    </div>
+                    <div class="group-box group-c">
+                        <h4>GRUPO C</h4>
+                        <p>Ya no me emocionan</p>
+                        <p>🔄 Para intercambio</p>
+                    </div>
+                    <div class="group-box group-d">
+                        <h4>GRUPO D</h4>
+                        <p>Mal estado o inadecuadas</p>
+                        <p>🗑️ Descarte</p>
+                    </div>
+                </div>
+
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="class1">
+                        <label for="class1">He clasificado toda mi lana en los 4 grupos</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="class2">
+                        <label for="class2">He sido honesta conmigo misma sobre cada lana</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>PASO 3: DECISIONES</span>
+                <span class="step-time">30 min</span>
+            </div>
+            <div class="step-content">
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec1">
+                        <label for="dec1">Grupo A → Preparado para reorganización</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec2">
+                        <label for="dec2">Grupo B → En sección separada "Segunda Oportunidad"</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec3">
+                        <label for="dec3">Grupo C → En bolsa para intercambio/donación/venta</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec4">
+                        <label for="dec4">Grupo D → Separado para descarte responsable</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec5">
+                        <label for="dec5">He fotografiado lo que voy a intercambiar/vender</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>PASO 4: REORGANIZACIÓN</span>
+                <span class="step-time">60 min</span>
+            </div>
+            <div class="step-content">
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg1">
+                        <label for="reorg1">Organizo por peso de lana (Lace, DK, Worsted, Chunky, etc.)</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg2">
+                        <label for="reorg2">Dentro de cada peso, organizo por color o por proyecto</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg3">
+                        <label for="reorg3">Etiqueto claramente cada sección</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg4">
+                        <label for="reorg4">Las lanas más usadas están en lugares accesibles</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg5">
+                        <label for="reorg5">Actualizo mi inventario digital</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg6">
+                        <label for="reorg6">Tomo fotos del estado final para referencia</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>PASO 5: PLANIFICACIÓN</span>
+                <span class="step-time">15 min</span>
+            </div>
+            <div class="step-content">
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="plan1">
+                        <label for="plan1">Identifico qué lanas necesitan proyecto urgente</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="plan2">
+                        <label for="plan2">Marco 2-3 proyectos prioritarios para los próximos 6 meses</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="plan3">
+                        <label for="plan3">Anoto qué lanas específicas necesito comprar (si es necesario)</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="plan4">
+                        <label for="plan4">Programo la fecha del próximo ritual (en 6 meses)</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <h3>📝 Mis Notas y Reflexiones</h3>
+            <textarea class="notes-box" placeholder="Escribe aquí tus observaciones, descubrimientos o ideas que surgieron durante el ritual...
+
+Ejemplos de qué anotar:
+• ¿Qué patrones noto en mis compras de lana?
+• ¿Hay colores que evito o que compro repetidamente?
+• ¿Qué proyectos me emocionan más para los próximos meses?
+• ¿Qué aprendí sobre mis preferencias actuales?"></textarea>
+        </div>
+
+        <div class="completion-celebration" id="celebration">
+            <div class="celebration-emoji">🎉🧶✨</div>
+            <h2>¡Felicitaciones!</h2>
+            <p>Has completado el Ritual de Organización de Stash</p>
+            <p>Tu espacio está listo para inspirarte en los próximos 6 meses</p>
+        </div>
+
+        <button class="print-button" onclick="window.print()">🖨️ Imprimir Esta Plantilla</button>
+    </div>
+
+    <div class="branding-footer">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="logo_Blog.png" alt="Logo de Club de la Madeja" class="logo-image">
+                <span class="logo-text">Club de la Madeja</span>
+            </div>
+        </div>
+        <p class="brand-tagline">Un recurso gratuito de <strong>Club de la Madeja</strong></p>
+        <p class="website">https://susanacuervolobos.substack.com/</p>
+        <div class="social-links">
+            <span>Sígueme: @susanalobosdesigns</span>
+        </div>
+    </div>
+
+    <script>
+        // Función para actualizar el progreso
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const progress = (checkedBoxes.length / checkboxes.length) * 100;
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = Math.round(progress) + '% Completado';
+            
+            // Mostrar celebración cuando se complete todo
+            if (progress === 100) {
+                document.getElementById('celebration').style.display = 'block';
+                document.getElementById('celebration').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                document.getElementById('celebration').style.display = 'none';
+            }
+        }
+
+        // Función para manejar el estado de los elementos completados
+        function handleCheckboxChange(checkbox) {
+            const listItem = checkbox.closest('.checklist-item');
+            if (checkbox.checked) {
+                listItem.classList.add('completed');
+            } else {
+                listItem.classList.remove('completed');
+            }
+            updateProgress();
+        }
+
+        // Agregar event listeners a todos los checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => handleCheckboxChange(checkbox));
+        });
+
+        // Función para guardar el estado en localStorage
+        function saveState() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const notes = document.querySelector('.notes-box');
+            
+            const state = {
+                checkboxes: {},
+                notes: notes.value
+            };
+            
+            checkboxes.forEach(checkbox => {
+                state.checkboxes[checkbox.id] = checkbox.checked;
+            });
+            
+            const stateData = JSON.stringify(state);
+            if (stateData.length < 5000000) { // Límite de almacenamiento
+                sessionStorage.setItem('ritualState', stateData);
+            }
+        }
+
+        // Función para cargar el estado guardado
+        function loadState() {
+            const savedState = sessionStorage.getItem('ritualState');
+            if (savedState) {
+                try {
+                    const state = JSON.parse(savedState);
+                    
+                    // Restaurar checkboxes
+                    Object.entries(state.checkboxes).forEach(([id, checked]) => {
+                        const checkbox = document.getElementById(id);
+                        if (checkbox) {
+                            checkbox.checked = checked;
+                            handleCheckboxChange(checkbox);
+                        }
+                    });
+                    
+                    // Restaurar notas
+                    if (state.notes) {
+                        document.querySelector('.notes-box').value = state.notes;
+                    }
+                } catch (e) {
+                    console.log('Error al cargar el estado guardado');
+                }
+            }
+        }
+
+        // Guardar estado automáticamente
+        document.addEventListener('change', saveState);
+        document.querySelector('.notes-box').addEventListener('input', saveState);
+
+        // Cargar estado al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            updateProgress();
+        });
+
+        // Animación suave para los grupos
+        document.querySelectorAll('.group-box').forEach(box => {
+            box.addEventListener('click', () => {
+                box.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    box.style.transform = 'translateY(-5px) scale(1)';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

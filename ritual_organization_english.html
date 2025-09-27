@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biannual Organization Ritual</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .ritual-intro {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .ritual-intro h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .step-container {
+            margin-bottom: 30px;
+        }
+
+        .step-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step-time {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .step-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #e9ecef;
+            border-top: none;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+            padding-left: 10px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        .checklist-item.completed label {
+            text-decoration: line-through;
+            color: #95a5a6;
+        }
+
+        .progress-section {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .group-box {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .group-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .group-a { border-color: #28a745; }
+        .group-b { border-color: #ffc107; }
+        .group-c { border-color: #fd7e14; }
+        .group-d { border-color: #dc3545; }
+
+        .group-box h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .group-a h4 { color: #28a745; }
+        .group-b h4 { color: #ffc107; }
+        .group-c h4 { color: #fd7e14; }
+        .group-d h4 { color: #dc3545; }
+
+        .notes-section {
+            margin-top: 30px;
+        }
+
+        .notes-box {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+        }
+
+        .notes-box:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .completion-celebration {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .celebration-emoji {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .print-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .print-button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .branding-footer {
+            margin-top: 40px;
+            padding: 30px 0;
+            border-top: 2px solid #e9ecef;
+            text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .susana-logo {
+            width: 80px;
+            height: auto;
+        }
+
+        .logo-text {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 1.4em;
+            font-weight: normal;
+            color: #4a90e2;
+            letter-spacing: 1px;
+        }
+
+        .brand-tagline {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .brand-tagline .designer-name {
+            color: #4a90e2;
+            font-weight: 600;
+        }
+
+        .website {
+            color: #667eea;
+            font-weight: 500;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .social-links {
+            color: #95a5a6;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧶 Smart Stash Ritual</h1>
+            <p>Transform your knitting space every 6 months</p>
+        </div>
+
+        <div class="ritual-intro">
+            <h2>🌟 Why will this ritual transform your knitting experience?</h2>
+            <p>As knitters, we often find ourselves accumulating beautiful yarns, inspiring patterns, and half-finished projects. But when our creative space becomes chaotic, so does our mind. This biannual ritual isn't just about organizing—it's about reconnecting with yourself and rediscovering the magic you already have at home.</p>
+            
+            <p>Imagine opening your storage area and immediately feeling inspiration instead of overwhelm. Picture knowing exactly what yarns you have, where they are, and what projects await you. This transformation isn't just possible—it's inevitable when you dedicate a few hours every six months to this loving process of reorganization.</p>
+            
+            <p>By the end of these 3 hours, you won't just have an organized space—you'll have mental clarity, renewed inspiration, and the creative freedom that emerges when everything has its perfect place. Because when your space breathes, your creativity soars.</p>
+            
+            <p><strong>Total estimated time:</strong> 3 hours | <strong>Best timing:</strong> Weekend morning</p>
+        </div>
+
+        <div class="progress-section">
+            <h3>Your Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">0% Complete</p>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>STEP 1: ASSESSMENT</span>
+                <span class="step-time">30 min</span>
+            </div>
+            <div class="step-content">
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval1">
+                        <label for="eval1">Remove ALL yarn from its storage place (no exceptions)</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval2">
+                        <label for="eval2">Thoroughly clean all containers and drawers</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval3">
+                        <label for="eval3">Add fresh moisture absorbers (silica packets or lavender sachets)</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval4">
+                        <label for="eval4">Put on motivating music or favorite podcast</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="eval5">
+                        <label for="eval5">Invite a knitting friend (optional but fun!)</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>STEP 2: CLASSIFICATION</span>
+                <span class="step-time">45 min</span>
+            </div>
+            <div class="step-content">
+                <p>Sort all your yarn into 4 groups. Take your time to evaluate each skein:</p>
+                
+                <div class="groups-container">
+                    <div class="group-box group-a">
+                        <h4>GROUP A</h4>
+                        <p>Yarns I love and know I'll use</p>
+                        <p>✨ My favorites</p>
+                    </div>
+                    <div class="group-box group-b">
+                        <h4>GROUP B</h4>
+                        <p>I like them but no defined project</p>
+                        <p>🤔 Second chance</p>
+                    </div>
+                    <div class="group-box group-c">
+                        <h4>GROUP C</h4>
+                        <p>No longer excite me</p>
+                        <p>🔄 For trading</p>
+                    </div>
+                    <div class="group-box group-d">
+                        <h4>GROUP D</h4>
+                        <p>Poor condition or unsuitable</p>
+                        <p>🗑️ Discard</p>
+                    </div>
+                </div>
+
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="class1">
+                        <label for="class1">I have classified all my yarn into the 4 groups</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="class2">
+                        <label for="class2">I have been honest with myself about each yarn</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>STEP 3: DECISIONS</span>
+                <span class="step-time">30 min</span>
+            </div>
+            <div class="step-content">
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec1">
+                        <label for="dec1">Group A → Ready for reorganization</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec2">
+                        <label for="dec2">Group B → In separate "Second Chance" section</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec3">
+                        <label for="dec3">Group C → In bag for trading/donation/sale</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec4">
+                        <label for="dec4">Group D → Set aside for responsible disposal</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="dec5">
+                        <label for="dec5">I have photographed what I'm going to trade/sell</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>STEP 4: REORGANIZATION</span>
+                <span class="step-time">60 min</span>
+            </div>
+            <div class="step-content">
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg1">
+                        <label for="reorg1">Organize by yarn weight (Lace, DK, Worsted, Chunky, etc.)</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg2">
+                        <label for="reorg2">Within each weight, organize by color or by project</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg3">
+                        <label for="reorg3">Clearly label each section</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg4">
+                        <label for="reorg4">Most-used yarns are in accessible places</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg5">
+                        <label for="reorg5">Update my digital inventory</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="reorg6">
+                        <label for="reorg6">Take photos of final state for reference</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-container">
+            <div class="step-header">
+                <span>STEP 5: PLANNING</span>
+                <span class="step-time">15 min</span>
+            </div>
+            <div class="step-content">
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <input type="checkbox" id="plan1">
+                        <label for="plan1">Identify which yarns urgently need a project</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="plan2">
+                        <label for="plan2">Mark 2-3 priority projects for the next 6 months</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="plan3">
+                        <label for="plan3">Note what specific yarns I need to buy (if necessary)</label>
+                    </li>
+                    <li class="checklist-item">
+                        <input type="checkbox" id="plan4">
+                        <label for="plan4">Schedule the date for next ritual (in 6 months)</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <h3>📝 My Notes and Reflections</h3>
+            <textarea class="notes-box" placeholder="Write here your observations, discoveries, or ideas that emerged during the ritual...
+
+Examples of what to note:
+• What patterns do I notice in my yarn purchases?
+• Are there colors I avoid or buy repeatedly?
+• What projects excite me most for the coming months?
+• What did I learn about my current preferences?"></textarea>
+        </div>
+
+        <div class="completion-celebration" id="celebration">
+            <div class="celebration-emoji">🎉🧶✨</div>
+            <h2>Congratulations!</h2>
+            <p>You have completed your Biannual Organization Ritual</p>
+            <p>Your space is ready to inspire you for the next 6 months</p>
+        </div>
+
+        <button class="print-button" onclick="window.print()">🖨️ Print This Template</button>
+
+        <div class="branding-footer">
+            <div class="logo-container">
+                <div class="logo">
+                    <img class="susana-logo" src="data:image/png;base64,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" alt="Susana Lobos Designs Logo" />
+                    <span class="logo-text">One Skein Club</span>
+                </div>
+            </div>
+            <p class="brand-tagline">A free resource from <span class="designer-name">@susanalobosdesigns</span></p>
+            <p class="website">oneskeinclub.substack.com</p>
+            <div class="social-links">
+                <span>Follow us: @susanalobosdesigns</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to update progress
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const progress = (checkedBoxes.length / checkboxes.length) * 100;
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = Math.round(progress) + '% Complete';
+            
+            // Show celebration when everything is completed
+            if (progress === 100) {
+                document.getElementById('celebration').style.display = 'block';
+                document.getElementById('celebration').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                document.getElementById('celebration').style.display = 'none';
+            }
+        }
+
+        // Function to handle completed items state
+        function handleCheckboxChange(checkbox) {
+            const listItem = checkbox.closest('.checklist-item');
+            if (checkbox.checked) {
+                listItem.classList.add('completed');
+            } else {
+                listItem.classList.remove('completed');
+            }
+            updateProgress();
+        }
+
+        // Add event listeners to all checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => handleCheckboxChange(checkbox));
+        });
+
+        // Function to save state in localStorage
+        function saveState() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const notes = document.querySelector('.notes-box');
+            
+            const state = {
+                checkboxes: {},
+                notes: notes.value
+            };
+            
+            checkboxes.forEach(checkbox => {
+                state.checkboxes[checkbox.id] = checkbox.checked;
+            });
+            
+            const stateData = JSON.stringify(state);
+            if (stateData.length < 5000000) { // Storage limit
+                sessionStorage.setItem('ritualStateEN', stateData);
+            }
+        }
+
+        // Function to load saved state
+        function loadState() {
+            const savedState = sessionStorage.getItem('ritualStateEN');
+            if (savedState) {
+                try {
+                    const state = JSON.parse(savedState);
+                    
+                    // Restore checkboxes
+                    Object.entries(state.checkboxes).forEach(([id, checked]) => {
+                        const checkbox = document.getElementById(id);
+                        if (checkbox) {
+                            checkbox.checked = checked;
+                            handleCheckboxChange(checkbox);
+                        }
+                    });
+                    
+                    // Restore notes
+                    if (state.notes) {
+                        document.querySelector('.notes-box').value = state.notes;
+                    }
+                } catch (e) {
+                    console.log('Error loading saved state');
+                }
+            }
+        }
+
+        // Save state automatically
+        document.addEventListener('change', saveState);
+        document.querySelector('.notes-box').addEventListener('input', saveState);
+
+        // Load state on startup
+        document.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            updateProgress();
+        });
+
+        // Smooth animation for groups
+        document.querySelectorAll('.group-box').forEach(box => {
+            box.addEventListener('click', () => {
+                box.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    box.style.transform = 'translateY(-5px) scale(1)';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
